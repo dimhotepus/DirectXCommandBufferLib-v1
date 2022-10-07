@@ -1029,35 +1029,7 @@ typedef HMONITOR (WINAPI* LPMONITORFROMRECT)(LPCRECT lprcScreenCoords, DWORD dwF
 
 BOOL WINAPI DXUTGetMonitorInfo(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo)
 {
-    static bool s_bInited = false;
-    static LPGETMONITORINFO s_pFnGetMonitorInfo = NULL;
-    if( !s_bInited )        
-    {
-        s_bInited = true;
-        HMODULE hUser32 = GetModuleHandle( L"USER32" );
-        if (hUser32 ) 
-        {
-            OSVERSIONINFOA osvi = {0}; osvi.dwOSVersionInfoSize = sizeof(osvi); GetVersionExA((OSVERSIONINFOA*)&osvi);
-            bool bNT = (VER_PLATFORM_WIN32_NT == osvi.dwPlatformId);    
-            s_pFnGetMonitorInfo = (LPGETMONITORINFO) (bNT ? GetProcAddress(hUser32,"GetMonitorInfoW") : GetProcAddress(hUser32,"GetMonitorInfoA"));
-        }
-    }
-
-    if( s_pFnGetMonitorInfo ) 
-        return s_pFnGetMonitorInfo(hMonitor, lpMonitorInfo);
-
-    RECT rcWork;
-    if ((hMonitor == DXUT_PRIMARY_MONITOR) && lpMonitorInfo && (lpMonitorInfo->cbSize >= sizeof(MONITORINFO)) && SystemParametersInfoA(SPI_GETWORKAREA, 0, &rcWork, 0))
-    {
-        lpMonitorInfo->rcMonitor.left = 0;
-        lpMonitorInfo->rcMonitor.top  = 0;
-        lpMonitorInfo->rcMonitor.right  = GetSystemMetrics(SM_CXSCREEN);
-        lpMonitorInfo->rcMonitor.bottom = GetSystemMetrics(SM_CYSCREEN);
-        lpMonitorInfo->rcWork = rcWork;
-        lpMonitorInfo->dwFlags = MONITORINFOF_PRIMARY;
-        return TRUE;
-    }
-    return FALSE;
+    return GetMonitorInfoW(hMonitor, lpMonitorInfo);
 }
 
 
@@ -1140,7 +1112,7 @@ void WINAPI DXUTGetDesktopResolution( UINT AdapterOrdinal, UINT* pWidth, UINT* p
 //--------------------------------------------------------------------------------------
 // Display error msg box to help debug 
 //--------------------------------------------------------------------------------------
-HRESULT WINAPI DXUTTrace( const CHAR* strFile, DWORD dwLine, HRESULT hr,
+HRESULT WINAPI DXUTTrace( const WCHAR* strFile, DWORD dwLine, HRESULT hr,
                           const WCHAR* strMsg, bool bPopMsgBox )
 {
     bool bShowMsgBoxOnError = DXUTGetShowMsgBoxOnError();

@@ -1,23 +1,13 @@
-// EMERGENT GAME TECHNOLOGIES PROPRIETARY INFORMATION
-//
-// This software is supplied under the terms of a license agreement or
-// nondisclosure agreement with Emergent Game Technologies and may not 
-// be copied or disclosed except in accordance with the terms of that 
-// agreement.
-//
-//      Copyright (c) 1996-2008 Emergent Game Technologies.
-//      All Rights Reserved.
-//
-// Emergent Game Technologies, Chapel Hill, North Carolina 27517
-// http://www.emergent.net
+// Open source.
+// See Vincent Scheib rant at http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
 #ifndef _CBMEMORYBUFFER_H_
 #define _CBMEMORYBUFFER_H_
 
 #ifndef CBD3D_PREPROCESSING
-#   include "stdio.h"
-#   include <assert.h>
-#   include "d3d9.h"
+#   include <cstdio>
+#   include <cassert>
+#   include <d3d9.h>
 #   include "PREPROCESSED_CBMemoryBuffer.h"
 #else
 
@@ -162,10 +152,6 @@ namespace CBD3D_COMMANDS
     };
 }
 
-//disable type conversion errors
-#pragma warning( disable : 4312 )
-#pragma warning( disable : 4311 )
-
 class CBMemoryBuffer
 {
 public:
@@ -184,7 +170,7 @@ public:
 
     static char *strFuncNames[120];
     static char* Index2FunctionName(unsigned int index) { return CBMemoryBuffer::strFuncNames[ index-CBD3D_COMMANDS::NULLCALL ]; }
-    template< class TYPE >
+    template<typename TYPE>
     void DoPutDWORD(TYPE val)
     {
         assert(sizeof(TYPE) <= sizeof(DWORD));
@@ -195,13 +181,13 @@ public:
 #endif
         *m_pNext = (DWORD) val;
         m_pNext++;
-        DEBUGPUT( "CBMemoryBuffer::DoPutDWORD", val , pNext, m_pNext );
+        DEBUGPUT( "CBMemoryBuffer::DoPutDWORD", val , pNext, m_pNext )
     }
 
-    template< class TYPE >
+    template<typename TYPE>
     void DoPutMem(TYPE *val,DWORD memsize)
     {
-        int memsize_in_DWORDs = (memsize+3)/4; // Number of DWORDs required to store memsize, round up
+        const DWORD memsize_in_DWORDs = (memsize+3)/4; // Number of DWORDs required to store memsize, round up
         assert(m_pNext >= m_pMem);
         assert((m_pNext+memsize_in_DWORDs-1) < (m_pMem+m_iSize));
 #if MEMTRACE
@@ -214,10 +200,10 @@ public:
         m_pNext++;
         if(val!=NULL)
         {
-            memcpy((void*)m_pNext,(const void*)val,memsize);
+            memcpy(m_pNext,val,memsize);
             m_pNext += memsize_in_DWORDs;
         }
-        DEBUGPUT( "CBMemoryBuffer::DoPutDWORD", val , pNext, m_pNext );
+        DEBUGPUT( "CBMemoryBuffer::DoPutDWORD", val , pNext, m_pNext )
     }
 
 
@@ -350,7 +336,7 @@ inline DWORD CBMemoryBuffer::DoGetDWORD()
 
 inline DWORD* CBMemoryBuffer::DoGetMem( DWORD memsize )
 {
-    int memsize_in_DWORDs = (memsize+3)/4; // Number of DWORDs required to store memsize, round up
+    const DWORD memsize_in_DWORDs = (memsize+3)/4; // Number of DWORDs required to store memsize, round up
     assert(m_pNext >= m_pMem);
     assert((m_pNext+memsize_in_DWORDs-1) < (m_pMem+m_iSize));
 #if MEMTRACE

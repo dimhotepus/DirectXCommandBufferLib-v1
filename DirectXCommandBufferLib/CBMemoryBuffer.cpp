@@ -159,9 +159,9 @@ char *CBMemoryBuffer::strFuncNames[120] = {
 
 
 CBMemoryBuffer::CBMemoryBuffer() : 
-m_pMem(NULL),
-m_iSize(0),
-m_pNext(NULL)
+    m_pMem(nullptr),
+    m_iSize(0),
+    m_pNext(nullptr)
 {
 }
 

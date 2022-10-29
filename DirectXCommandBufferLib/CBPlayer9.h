@@ -1,8 +1,8 @@
 // Open source.
 // See Vincent Scheib rant at http://beautifulpixels.blogspot.com/2008/07/parallel-rendering-with-directx-command.html
 
-#ifndef _CBPLAYBACK_H_
-#define _CBPLAYBACK_H_
+#ifndef DIRECTX_COMMAND_BUFFER_CBPLAYER_H_
+#define DIRECTX_COMMAND_BUFFER_CBPLAYER_H_
 
 #ifndef CBD3D_PREPROCESSING
 #include "CBMemoryBuffer.h"
@@ -166,7 +166,7 @@ public:
     IDirect3DDevice9* m_pDevice;
 };
 
-typedef void (CBPlayer9::*PlayBFuncPTR) ();
+using PlayBFuncPTR = void (CBPlayer9::*)();
  
 #endif // CBD3D_PREPROCESSING
-#endif
+#endif // DIRECTX_COMMAND_BUFFER_CBPLAYER_H_

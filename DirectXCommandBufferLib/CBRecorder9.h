@@ -15,7 +15,7 @@
 class CBRecorder9 : public IDirect3DDevice9
 {
 public:
-    CBRecorder9(): m_pCB(NULL) {}
+    CBRecorder9(): m_pCB(nullptr) {}
 
     void SetCommandBuffer(CBMemoryBuffer* pCB) { m_pCB = pCB; }
 
@@ -25,7 +25,8 @@ public:
         DWORD* pMem;
         UINT iNumDWORDs;
         m_pCB->GetCBMemory(pMem,iNumDWORDs);
-        if(*pMem!=0x0)
+
+        if(*pMem != 0)
         {
             OutputDebugStringA("ERROR a memory buffer in use is being recorded!\n");
             return E_FAIL;
@@ -42,7 +43,8 @@ public:
             m_pCB->PutDWORD(CBD3D_COMMANDS::NULLCALL);
             return D3D_OK;
         }
-        return E_OUTOFMEMORY ;
+
+        return E_OUTOFMEMORY;
     }
 
     

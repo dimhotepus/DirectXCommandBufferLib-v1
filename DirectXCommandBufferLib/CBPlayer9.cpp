@@ -5,9 +5,9 @@
 #ifndef CBD3D_PREPROCESSING
 
 #include <cstdio>
-#include <d3d9.h>
-// #include "d3dx9effect.h"
 #include <cassert>
+#include <type_traits>
+#include <d3d9.h>
 #include "PREPROCESSED_CBPlayer9.cpp"
 
 #else

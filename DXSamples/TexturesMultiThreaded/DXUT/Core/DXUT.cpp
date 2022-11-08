@@ -670,8 +670,8 @@ HWND WINAPI DXUTGetHWNDDeviceWindowed()                    { return GetDXUTState
 RECT WINAPI DXUTGetWindowClientRect()                      { RECT rc; GetClientRect( DXUTGetHWND(), &rc ); return rc; }
 LONG WINAPI DXUTGetWindowWidth()                           { RECT rc = DXUTGetWindowClientRect(); return ((LONG)rc.right - rc.left); }
 LONG WINAPI DXUTGetWindowHeight()                          { RECT rc = DXUTGetWindowClientRect(); return ((LONG)rc.bottom - rc.top); }
-RECT WINAPI DXUTGetWindowClientRectAtModeChange()          { RECT rc = { 0, 0, GetDXUTState().GetWindowBackBufferWidthAtModeChange(), GetDXUTState().GetWindowBackBufferHeightAtModeChange() }; return rc; }
-RECT WINAPI DXUTGetFullsceenClientRectAtModeChange()       { RECT rc = { 0, 0, GetDXUTState().GetFullScreenBackBufferWidthAtModeChange(), GetDXUTState().GetFullScreenBackBufferHeightAtModeChange() }; return rc; }
+RECT WINAPI DXUTGetWindowClientRectAtModeChange()          { RECT rc = { 0, 0, static_cast<long>(GetDXUTState().GetWindowBackBufferWidthAtModeChange()), static_cast<long>(GetDXUTState().GetWindowBackBufferHeightAtModeChange()) }; return rc; }
+RECT WINAPI DXUTGetFullsceenClientRectAtModeChange()       { RECT rc = { 0, 0, static_cast<long>(GetDXUTState().GetFullScreenBackBufferWidthAtModeChange()), static_cast<long>(GetDXUTState().GetFullScreenBackBufferHeightAtModeChange()) }; return rc; }
 double WINAPI DXUTGetTime()                                { return GetDXUTState().GetTime(); }
 float WINAPI DXUTGetElapsedTime()                          { return GetDXUTState().GetElapsedTime(); }
 float WINAPI DXUTGetFPS()                                  { return GetDXUTState().GetFPS(); }

@@ -137,13 +137,13 @@ public:
 protected:
     LARGE_INTEGER GetAdjustedCurrentTime();
 
-    bool m_bUsingQPF;
-    bool m_bTimerStopped;
     LONGLONG m_llQPFTicksPerSec;
 
     LONGLONG m_llStopTime;
     LONGLONG m_llLastElapsedTime;
     LONGLONG m_llBaseTime;
+
+    bool m_bTimerStopped;
 };
 
 CDXUTTimer* WINAPI DXUTGetGlobalTimer();

@@ -22,7 +22,6 @@ CDXUTTimer* WINAPI DXUTGetGlobalTimer()
 //--------------------------------------------------------------------------------------
 CDXUTTimer::CDXUTTimer()
 {
-    m_bTimerStopped     = true;
     m_llQPFTicksPerSec  = 0;
 
     m_llStopTime        = 0;
@@ -33,6 +32,8 @@ CDXUTTimer::CDXUTTimer()
     LARGE_INTEGER qwTicksPerSec = { 0 };
     QueryPerformanceFrequency( &qwTicksPerSec );
     m_llQPFTicksPerSec = qwTicksPerSec.QuadPart;
+
+    m_bTimerStopped = true;
 }
 
 
@@ -702,7 +703,7 @@ BOOL WINAPI DXUT_Dynamic_D3D10StateBlockMaskGetSetting(D3D10_STATE_BLOCK_MASK *p
     if( DXUT_EnsureD3D10APIs() && s_DynamicD3D10StateBlockMaskGetSetting != NULL )
         return s_DynamicD3D10StateBlockMaskGetSetting( pMask, StateType, Entry );
     else
-        return E_FAIL;
+        return FALSE;
 }
 
 //--------------------------------------------------------------------------------------

@@ -865,13 +865,6 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
     {
         ShowSliders(false);
 
-        LARGE_INTEGER currentTime;
-        QueryPerformanceCounter(&currentTime);
-        
-        LARGE_INTEGER elapsedSinceStartTimeINT;
-        elapsedSinceStartTimeINT.QuadPart = currentTime.QuadPart - g_TestStartTime.QuadPart;
-        double elapsedSinceStartTime = elapsedSinceStartTimeINT.QuadPart / (double)g_lFrequency.QuadPart;
-
         switch (g_SampleStablizationState)
         {
         case SAMPLE_STABALIZATION_STEP1_RESET:

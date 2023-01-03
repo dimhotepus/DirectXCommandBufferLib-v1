@@ -168,8 +168,11 @@ public:
         return m_pNext;
     }
 
-    DWORD DoGetDWORD()
+    template<typename T>
+    T DoGetDWORD()
     {
+        static_assert(sizeof(T) <= sizeof(DWORD));
+
         assert(m_pNext >= m_pMem);
         assert(m_pNext < m_pMem + m_iSize);
 
@@ -177,13 +180,13 @@ public:
         DWORD* pNext{ m_pNext };
 #endif
 
-        const DWORD ret{ *m_pNext };
+        const alignas(T) DWORD ret{ *m_pNext };
 
         m_pNext++;
 
         DEBUGGET("CBMemoryBuffer::DoGetDWORD", ret, pNext, m_pNext)
 
-        return ret;
+        return (T) ret;
     }
 
     template<typename T>
@@ -217,7 +220,7 @@ public:
 
         DEBUGGET("CBMemoryBuffer::DoGetMem", ret, pNext, m_pNext)
 
-            return reinterpret_cast<T*>(ret);
+        return reinterpret_cast<T*>(ret);
     }
 
     template<typename TYPE>
@@ -232,8 +235,7 @@ public:
         DWORD *pNext{m_pNext};
 #endif
 
-        alignas(TYPE) DWORD dword = static_cast<DWORD>(val);
-        memcpy(m_pNext, &dword, sizeof(dword));
+        memcpy(m_pNext, &val, sizeof(val));
 
         ++m_pNext;
 
@@ -293,6 +295,18 @@ public:
     GET_AND_PUT_OBJ( CONST D3DRECTPATCH_INFO );
     GET_AND_PUT_OBJ( CONST D3DTRIPATCH_INFO  );
 
+#ifdef _WIN64
+    GET_AND_PUT_OBJ( D3DDISPLAYMODE* );
+    GET_AND_PUT_OBJ( BOOL* );
+    GET_AND_PUT_OBJ( CONST float* );
+    GET_AND_PUT_OBJ( float* );
+    GET_AND_PUT_OBJ( DWORD* );
+    GET_AND_PUT_OBJ( CONST void* );
+    GET_AND_PUT_OBJ( CONST DWORD* );
+    GET_AND_PUT_OBJ( CONST int* );
+    GET_AND_PUT_OBJ( LPUINT );
+#else
+    // Types that can be cast as DWORDs.
     GET_AND_PUT_DWORD( D3DDISPLAYMODE* );
     GET_AND_PUT_DWORD( BOOL* );
     GET_AND_PUT_DWORD( CONST float* );
@@ -302,47 +316,75 @@ public:
     GET_AND_PUT_DWORD( CONST DWORD* );
     GET_AND_PUT_DWORD( CONST int* );
     GET_AND_PUT_DWORD( LPUINT );
+#endif
 
-    // Types that can be cast as DWORDs.
+#ifdef _WIN64
+    GET_AND_PUT_OBJ( void** );
+    GET_AND_PUT_OBJ( IDirect3DVertexBuffer9* );
+    GET_AND_PUT_OBJ( IDirect3DVertexDeclaration9* );
+    GET_AND_PUT_OBJ( IDirect3DIndexBuffer9* );
+    GET_AND_PUT_OBJ( IDirect3DSurface9* );
+    GET_AND_PUT_OBJ( IDirect3DSwapChain9** );
+    GET_AND_PUT_OBJ( HWND );
+    GET_AND_PUT_OBJ( IDirect3DSurface9** );
+    GET_AND_PUT_OBJ( IDirect3DTexture9** );
+    GET_AND_PUT_OBJ( IDirect3DVolumeTexture9** );
+    GET_AND_PUT_OBJ( IDirect3DCubeTexture9** );
+    GET_AND_PUT_OBJ( IDirect3DVertexBuffer9** );
+    GET_AND_PUT_OBJ( IDirect3DIndexBuffer9** );
+    GET_AND_PUT_OBJ( IDirect3DBaseTexture9* );
+    GET_AND_PUT_OBJ( IDirect3DStateBlock9** );
+    GET_AND_PUT_OBJ( IDirect3DBaseTexture9** );
+    GET_AND_PUT_OBJ( IDirect3DVertexDeclaration9** );
+    GET_AND_PUT_OBJ( IDirect3DVertexShader9** );
+    GET_AND_PUT_OBJ( IDirect3DVertexShader9* );
+    GET_AND_PUT_OBJ( IDirect3DPixelShader9** );
+    GET_AND_PUT_OBJ( IDirect3DPixelShader9* );
+    GET_AND_PUT_OBJ( IDirect3DQuery9** );
+    GET_AND_PUT_OBJ( IDirect3D9** );
+#else
     GET_AND_PUT_DWORD( void** );
-    GET_AND_PUT_DWORD( D3DPRIMITIVETYPE );
-    GET_AND_PUT_DWORD( UINT );
-    GET_AND_PUT_DWORD( INT );
     GET_AND_PUT_DWORD( IDirect3DVertexBuffer9* );
     GET_AND_PUT_DWORD( IDirect3DVertexDeclaration9* );
     GET_AND_PUT_DWORD( IDirect3DIndexBuffer9* );
     GET_AND_PUT_DWORD( IDirect3DSurface9* );
-    GET_AND_PUT_DWORD( DWORD );
     GET_AND_PUT_DWORD( IDirect3DSwapChain9** );
     GET_AND_PUT_DWORD( HWND );
-    GET_AND_PUT_DWORD( D3DBACKBUFFER_TYPE );
     GET_AND_PUT_DWORD( IDirect3DSurface9** );
-    GET_AND_PUT_DWORD( D3DFORMAT );
-    GET_AND_PUT_DWORD( D3DPOOL );
     GET_AND_PUT_DWORD( IDirect3DTexture9** );
     GET_AND_PUT_DWORD( IDirect3DVolumeTexture9** );
     GET_AND_PUT_DWORD( IDirect3DCubeTexture9** );
     GET_AND_PUT_DWORD( IDirect3DVertexBuffer9** );
     GET_AND_PUT_DWORD( IDirect3DIndexBuffer9** );
-    GET_AND_PUT_DWORD( D3DMULTISAMPLE_TYPE );
     GET_AND_PUT_DWORD( IDirect3DBaseTexture9* );
-    GET_AND_PUT_DWORD( D3DTEXTUREFILTERTYPE );
-    GET_AND_PUT_DWORD( float );
-    GET_AND_PUT_DWORD( D3DTRANSFORMSTATETYPE );
-    GET_AND_PUT_DWORD( D3DRENDERSTATETYPE );
-    GET_AND_PUT_DWORD( D3DSTATEBLOCKTYPE );
     GET_AND_PUT_DWORD( IDirect3DStateBlock9** );
     GET_AND_PUT_DWORD( IDirect3DBaseTexture9** );
-    GET_AND_PUT_DWORD( D3DTEXTURESTAGESTATETYPE );
-    GET_AND_PUT_DWORD( D3DSAMPLERSTATETYPE );
     GET_AND_PUT_DWORD( IDirect3DVertexDeclaration9** );
     GET_AND_PUT_DWORD( IDirect3DVertexShader9** );
     GET_AND_PUT_DWORD( IDirect3DVertexShader9* );
     GET_AND_PUT_DWORD( IDirect3DPixelShader9** );
     GET_AND_PUT_DWORD( IDirect3DPixelShader9* );
-    GET_AND_PUT_DWORD( D3DQUERYTYPE );
     GET_AND_PUT_DWORD( IDirect3DQuery9** );
     GET_AND_PUT_DWORD( IDirect3D9** );
+#endif
+
+    // Types that can be cast as DWORDs.
+    GET_AND_PUT_DWORD( D3DPRIMITIVETYPE );
+    GET_AND_PUT_DWORD( UINT );
+    GET_AND_PUT_DWORD( INT );
+    GET_AND_PUT_DWORD( DWORD );
+    GET_AND_PUT_DWORD( D3DBACKBUFFER_TYPE );
+    GET_AND_PUT_DWORD( D3DFORMAT );
+    GET_AND_PUT_DWORD( D3DPOOL );
+    GET_AND_PUT_DWORD( D3DMULTISAMPLE_TYPE );
+    GET_AND_PUT_DWORD( D3DTEXTUREFILTERTYPE );
+    GET_AND_PUT_DWORD( float );
+    GET_AND_PUT_DWORD( D3DTRANSFORMSTATETYPE );
+    GET_AND_PUT_DWORD( D3DRENDERSTATETYPE );
+    GET_AND_PUT_DWORD( D3DSTATEBLOCKTYPE );
+    GET_AND_PUT_DWORD( D3DTEXTURESTAGESTATETYPE );
+    GET_AND_PUT_DWORD( D3DSAMPLERSTATETYPE );
+    GET_AND_PUT_DWORD( D3DQUERYTYPE );
 
     // Get the unread or unwritten memory size.
     unsigned GetAvailableMemorySize() const

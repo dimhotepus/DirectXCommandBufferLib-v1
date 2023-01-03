@@ -162,7 +162,7 @@ void CBPlayer9::Playback(IDirect3DDevice9 *pDevice, CBMemoryBuffer* pCB)
     bool bParsingCommand = true;
     while(bParsingCommand && m_pCB->GetAvailableMemorySize()>0)
     {
-        DWORD dwFunc = m_pCB->DoGetDWORD();
+        auto dwFunc = m_pCB->DoGetDWORD<decltype(CBD3D_COMMANDS::NULLCALL)>();
         if(dwFunc == CBD3D_COMMANDS::NULLCALL)            
         {
             m_pCB->ResetNext();

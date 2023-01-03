@@ -139,10 +139,10 @@
 
 //---------------------------------------------------------------------------
 // Get and Put macros
-#define PUTDWORD( type0 ) void PutDWORD( type0  arg ) { static_assert(sizeof(arg) <= sizeof(DWORD)); DoPutDWORD( (DWORD) arg); }
-#define PUTOBJ( type0 ) void PutDWORD( type0* arg ) { DoPutMem(arg, sizeof( type0 )); }
-#define GETDWORD( type0 ) void GetDWORD( type0* arg ) { static_assert(sizeof(*arg) <= sizeof(DWORD)); *arg = ( type0 ) DoGetDWORD(); }
-#define GETOBJ( type0 ) void GetDWORD( type0** arg ) { *arg = DoGetMem<type0>(sizeof( type0 )); }
+#define PUTDWORD( type0 ) void PutDWORD( type0  arg ) { DoPutDWORD(arg); }
+#define PUTOBJ( type0 ) void PutDWORD( type0* arg ) { DoPutMem(arg, sizeof(type0)); }
+#define GETDWORD( type0 ) void GetDWORD( type0* arg ) { *arg = DoGetDWORD<type0>(); }
+#define GETOBJ( type0 ) void GetDWORD( type0** arg ) { *arg = DoGetMem<type0>(sizeof(type0)); }
 #define GET_AND_PUT_OBJ( type0 )    GETOBJ( type0 )   PUTOBJ( type0 )
 #define GET_AND_PUT_DWORD( type0 )  GETDWORD( type0 ) PUTDWORD( type0 )
 
